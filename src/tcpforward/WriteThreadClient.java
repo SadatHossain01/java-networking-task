@@ -20,51 +20,49 @@ public class WriteThreadClient implements Runnable {
     public void run() {
         try {
             Scanner input = new Scanner(System.in);
-            while (true) {
+            while (input.hasNext()) {
                 showOptions();
-                if (input.hasNext()) {
-                    int command = Integer.parseInt(input.nextLine());
-                    String username, password;
-                    switch (command) {
-                        case 1:
-                            System.out.println("Client has already been registered to the server.");
-                            break;
-                        case 2:
-                            System.out.print("Enter your username: ");
-                            username = input.nextLine();
-                            System.out.print("Enter the password: ");
-                            password = input.nextLine();
-                            networkUtil.write(new Authenticate(username, password, false));
-                            break;
-                        case 3:
-                            networkUtil.write(new ListRequest(name));
-                            break;
-                        case 4:
-                            System.out.println("Enter username of the client to send: ");
-                            String to = input.nextLine();
-                            System.out.println("Enter the message: ");
-                            String text = input.nextLine();
-                            Message message = new Message();
-                            message.setFrom(name);
-                            message.setTo(to);
-                            message.setBroadcast(false);
-                            message.setText(text);
-                            networkUtil.write(message);
-                            break;
-                        case 5:
-                            System.out.println("Enter the message: ");
-                            text = input.nextLine();
-                            message = new Message();
-                            message.setFrom(name);
-                            message.setTo("all");
-                            message.setBroadcast(true);
-                            message.setText(text);
-                            networkUtil.write(message);
-                            break;
-                        default:
-                            System.out.println("You must enter a choice between 1 to 5");
-                            break;
-                    }
+                int command = Integer.parseInt(input.nextLine());
+                String username, password;
+                switch (command) {
+                    case 1:
+                        System.out.println("Client has already been registered to the server.");
+                        break;
+                    case 2:
+                        System.out.print("Enter your username: ");
+                        username = input.nextLine();
+                        System.out.print("Enter the password: ");
+                        password = input.nextLine();
+                        networkUtil.write(new Authenticate(username, password, false));
+                        break;
+                    case 3:
+                        networkUtil.write(new ListRequest(name));
+                        break;
+                    case 4:
+                        System.out.println("Enter username of the client to send: ");
+                        String to = input.nextLine();
+                        System.out.println("Enter the message: ");
+                        String text = input.nextLine();
+                        Message message = new Message();
+                        message.setFrom(name);
+                        message.setTo(to);
+                        message.setBroadcast(false);
+                        message.setText(text);
+                        networkUtil.write(message);
+                        break;
+                    case 5:
+                        System.out.println("Enter the message: ");
+                        text = input.nextLine();
+                        message = new Message();
+                        message.setFrom(name);
+                        message.setTo("all");
+                        message.setBroadcast(true);
+                        message.setText(text);
+                        networkUtil.write(message);
+                        break;
+                    default:
+                        System.out.println("You must enter a choice between 1 to 5");
+                        break;
                 }
             }
         } catch (Exception e) {
