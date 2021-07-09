@@ -9,18 +9,21 @@ public class WriteThreadClient implements Runnable {
 
     private Thread thr;
     private NetworkUtil networkUtil;
+    Scanner input;
     String name;
 
-    public WriteThreadClient(NetworkUtil networkUtil) {
+    public WriteThreadClient(String name, NetworkUtil networkUtil, Scanner scanner) {
+        this.name = name;
         this.networkUtil = networkUtil;
         this.thr = new Thread(this);
+        this.input = scanner;
         thr.start();
     }
 
     public void run() {
+        System.out.println("In write thread of client " + name);
         try {
-            Scanner input = new Scanner(System.in);
-            while (input.hasNext()) {
+            while (true) {
                 showOptions();
                 int command = Integer.parseInt(input.nextLine());
                 String username, password;
@@ -67,6 +70,7 @@ public class WriteThreadClient implements Runnable {
             }
         } catch (Exception e) {
             System.out.println(e);
+            e.printStackTrace();
         } finally {
             try {
                 networkUtil.closeConnection();

@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.util.HashMap;
 
 public class Server {
-
     private ServerSocket serverSocket;
     public HashMap<String, Credentials> clientMap;
 
@@ -17,8 +16,11 @@ public class Server {
         try {
             serverSocket = new ServerSocket(33333);
             while (true) {
+                System.out.println("Server waiting");
                 Socket clientSocket = serverSocket.accept();
+                System.out.println("Client accepted");
                 serve(clientSocket);
+                System.out.println("Client served");
             }
         } catch (Exception e) {
             System.out.println("Server starts:" + e);
@@ -37,7 +39,6 @@ public class Server {
             clientMap.put(username, new Credentials(password, networkUtil));
         }
         new ReadThreadServer(clientMap, networkUtil);
-        System.out.println("Read Thread Server opened from serve");
     }
 
     public static void main(String args[]) {
