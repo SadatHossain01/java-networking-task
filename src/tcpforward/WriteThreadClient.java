@@ -11,8 +11,10 @@ public class WriteThreadClient implements Runnable {
     private NetworkUtil networkUtil;
     Scanner input;
     String name;
+    private Client client;
 
-    public WriteThreadClient(String name, NetworkUtil networkUtil, Scanner scanner) {
+    public WriteThreadClient(Client client, String name, NetworkUtil networkUtil, Scanner scanner) {
+        this.client = client;
         this.name = name;
         this.networkUtil = networkUtil;
         this.thr = new Thread(this);
@@ -32,36 +34,39 @@ public class WriteThreadClient implements Runnable {
                         System.out.println("Client has already been registered to the server.");
                         break;
                     case 2:
-                        System.out.print("Enter your username: ");
-                        username = input.nextLine();
-                        System.out.print("Enter the password: ");
-                        password = input.nextLine();
-                        networkUtil.write(new Authenticate(username, password, false));
+                        if (client.isLoggedIn()) System.out.println("You are already logged in");
+                        else {
+                            System.out.print("Enter your username: ");
+                            username = input.nextLine();
+                            System.out.print("Enter the password: ");
+                            password = input.nextLine();
+                            if (username.equals(name)) networkUtil.write(new Authenticate(username, password, false));
+                            else System.out.println("Incorrect username");
+                        }
                         break;
                     case 3:
-                        networkUtil.write(new ListRequest(name));
+                        if (!client.isLoggedIn()) System.out.println("You must login first!");
+                        else networkUtil.write(new ListRequest(name));
                         break;
                     case 4:
-                        System.out.println("Enter username of the client to send: ");
-                        String to = input.nextLine();
-                        System.out.println("Enter the message: ");
-                        String text = input.nextLine();
-                        Message message = new Message();
-                        message.setFrom(name);
-                        message.setTo(to);
-                        message.setBroadcast(false);
-                        message.setText(text);
-                        networkUtil.write(message);
+                        if (!client.isLoggedIn()) System.out.println("You must login first!");
+                        else {
+                            System.out.print("Enter username of the client to send: ");
+                            String to = input.nextLine();
+                            System.out.print("Enter the message: ");
+                            String text = input.nextLine();
+                            Message message = new Message(name, to, text, false);
+                            networkUtil.write(message);
+                        }
                         break;
                     case 5:
-                        System.out.println("Enter the message: ");
-                        text = input.nextLine();
-                        message = new Message();
-                        message.setFrom(name);
-                        message.setTo("all");
-                        message.setBroadcast(true);
-                        message.setText(text);
-                        networkUtil.write(message);
+                        if (!client.isLoggedIn()) System.out.println("You must login first!");
+                        else {
+                            System.out.print("Enter the message: ");
+                            String text = input.nextLine();
+                            Message message = new Message(name, "all", text, true);
+                            networkUtil.write(message);
+                        }
                         break;
                     default:
                         System.out.println("You must enter a choice between 1 to 5");

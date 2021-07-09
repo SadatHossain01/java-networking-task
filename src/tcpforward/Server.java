@@ -18,12 +18,13 @@ public class Server {
             while (true) {
                 System.out.println("Server waiting");
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Client accepted");
+                System.out.println("New Client Accepted");
                 serve(clientSocket);
-                System.out.println("Client served");
+                System.out.println("New Client Served");
             }
         } catch (Exception e) {
             System.out.println("Server starts:" + e);
+            e.printStackTrace();
         }
     }
 
@@ -31,12 +32,10 @@ public class Server {
         NetworkUtil networkUtil = new NetworkUtil(clientSocket);
         var any = networkUtil.read();
         if (any instanceof Authenticate && ((Authenticate) any).isRegistration){
-            System.out.println("Talking from serve");
             String username = ((Authenticate) any).getUsername();
             String password = ((Authenticate) any).getPassword();
-            System.out.println("Username: " + username);
-            System.out.println("Password: " + password);
             clientMap.put(username, new Credentials(password, networkUtil));
+            System.out.println("New user registered: " + username);
         }
         new ReadThreadServer(clientMap, networkUtil);
     }

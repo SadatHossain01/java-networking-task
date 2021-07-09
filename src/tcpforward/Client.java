@@ -5,6 +5,23 @@ import util.NetworkUtil;
 import java.util.Scanner;
 
 public class Client {
+    private boolean isRegistered, isLoggedIn;
+
+    public boolean isRegistered() {
+        return isRegistered;
+    }
+
+    public void setRegistered(Boolean registered) {
+        isRegistered = registered;
+    }
+
+    public boolean isLoggedIn() {
+        return isLoggedIn;
+    }
+
+    public void setLoggedIn(Boolean loggedIn) {
+        isLoggedIn = loggedIn;
+    }
 
     public Client(String serverAddress, int serverPort, Scanner input) {
         try {
@@ -16,12 +33,11 @@ public class Client {
             String password = input.nextLine();
             Authenticate newClient = new Authenticate(username, password, true);
             networkUtil.write(newClient);
-            new ReadThreadClient(networkUtil);
-            new WriteThreadClient(username, networkUtil, input);
-            System.out.println("All threads opened");
-            input.close();
+            new ReadThreadClient(this, networkUtil);
+            new WriteThreadClient(this, username, networkUtil, input);
         } catch (Exception e) {
             System.out.println(e);
+            e.printStackTrace();
         }
     }
 

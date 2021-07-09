@@ -8,34 +8,25 @@ public class Message implements Serializable {
     private String text;
     private Boolean broadcast;
 
-    public Message() {
+    public Message(String from, String to, String text, Boolean broadcast) {
+        this.from = from;
+        this.to = to;
+        this.text = text;
+        this.broadcast = broadcast;
     }
 
     public String getFrom() {
         return from;
     }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
     public String getTo() {
         return to;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public Boolean isBroadcast() {
+        return broadcast;
     }
 
     public String getText() {
         return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public void setBroadcast(Boolean b) {
-        broadcast = b;
     }
 }
