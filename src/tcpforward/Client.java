@@ -19,9 +19,9 @@ public class Client {
             networkUtil.write(newClient);
             new ReadThreadClient(networkUtil);
             new WriteThreadClient(networkUtil);
-            input.close();
         } catch (Exception e) {
             System.out.println(e);
+						e.printStackTrace();
         }
     }
 

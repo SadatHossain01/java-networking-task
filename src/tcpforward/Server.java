@@ -22,6 +22,7 @@ public class Server {
             }
         } catch (Exception e) {
             System.out.println("Server starts:" + e);
+						e.printStackTrace();
         }
     }
 

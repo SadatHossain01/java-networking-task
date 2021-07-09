@@ -26,6 +26,7 @@ public class ReadThreadClient implements Runnable {
             }
         } catch (Exception e) {
             System.out.println(e);
+						e.printStackTrace();
         } finally {
             try {
                 networkUtil.closeConnection();

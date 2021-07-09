@@ -11,8 +11,8 @@ import java.util.Map;
 public class ReadThreadServer implements Runnable {
     private Thread thr;
     private NetworkUtil networkUtil;
-    public HashMap<String, Credentials> clientMap;
-    public HashMap<String, Credentials> loggedInClients;
+    public HashMap<String, Credentials> clientMap = new HashMap<>();
+    public HashMap<String, Credentials> loggedInClients = new HashMap<>();
 
 
     public ReadThreadServer(HashMap<String, Credentials> map, NetworkUtil networkUtil) {
@@ -63,6 +63,7 @@ public class ReadThreadServer implements Runnable {
             }
         } catch (Exception e) {
             System.out.println(e);
+						e.printStackTrace();
         } finally {
             try {
                 networkUtil.closeConnection();

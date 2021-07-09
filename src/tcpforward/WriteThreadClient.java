@@ -20,9 +20,11 @@ public class WriteThreadClient implements Runnable {
     public void run() {
         try {
             Scanner input = new Scanner(System.in);
-            while (input.hasNext()) {
+            while (/*input.hasNext()*/true) {
+								//input.hasNext() waits for input, delaying showOptions()
                 showOptions();
-                int command = Integer.parseInt(input.nextLine());
+                int command = /*Integer.parseInt(input.nextLine())*/input.nextInt();
+								input.nextLine();
                 String username, password;
                 switch (command) {
                     case 1:
@@ -67,6 +69,7 @@ public class WriteThreadClient implements Runnable {
             }
         } catch (Exception e) {
             System.out.println(e);
+						e.printStackTrace();
         } finally {
             try {
                 networkUtil.closeConnection();
