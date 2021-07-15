@@ -7,9 +7,10 @@ import java.util.HashMap;
 
 public class Server {
     ServerSocket serverSocket;
-    HashMap<String, ClientCredentials> clientMap = new HashMap<>();
+    HashMap<String, ClientCredentials> clientMap;
 
     Server(int port) throws IOException {
+        clientMap = new HashMap<>();
         serverSocket = new ServerSocket(port);
     }
 

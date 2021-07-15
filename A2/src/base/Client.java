@@ -1,20 +1,18 @@
 package base;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class Client {
     Socket socket;
     boolean isConnected = false;
-    ObjectOutputStream oos;
-    ObjectInputStream ois;
+    NetworkUtil networkUtil;
     String username;
 
     Client(String address, int port) throws IOException {
         socket = new Socket(address, port);
+        networkUtil = new NetworkUtil(socket);
         new ReadThreadClient(this);
     }
 
@@ -31,8 +29,6 @@ public class Client {
         String selfAddress = "127.0.0.1";
         int port = 33333;
         Client c = null;
-        ObjectOutputStream oos = null;
-        ObjectInputStream ois = null;
 
         while (true) {
             showOptions();
@@ -45,39 +41,38 @@ public class Client {
             }
             switch (choice){
                 case 1:
-                    c = new Client(selfAddress, port);
-                    System.out.print("Enter your username: ");
-                    c.username = scanner.nextLine();
-                    oos = new ObjectOutputStream(c.socket.getOutputStream());
-                    ois = new ObjectInputStream(c.socket.getInputStream());
-                    c.oos = oos;
-                    c.ois = ois;
-                    oos.writeObject(new Message(Message.Type.UserName, c.username, "Server", c.username));
-                    c.isConnected = true;
-                    break;
-                case 2:
-                    assert c != null;
-                    if (c.isConnected){
-                        oos.writeObject(new Message(Message.Type.GetList, c.username, c.username, ""));
+                    if (c != null && c.isConnected) System.out.println("You are already connected!");
+                    else {
+                        c = new Client(selfAddress, port);
+                        System.out.print("Enter your username: ");
+                        c.username = scanner.nextLine();
+                        c.networkUtil.write(new Message(Message.Type.UserName, c.username, "Server", c.username));
+                        c.isConnected = true;
                     }
                     break;
+                case 2:
+                    if (c != null && c.isConnected){
+                        c.networkUtil.write(new Message(Message.Type.GetList, c.username, c.username, ""));
+                    }
+                    else System.out.println("You must connect to the server first");
+                    break;
                 case 3:
-                    assert c != null;
-                    if (c.isConnected) {
+                    if (c!= null && c.isConnected) {
                         System.out.print("Enter the username of the client you want to send the message to: ");
                         String to = scanner.nextLine();
                         System.out.println("Enter your message:");
                         String text = scanner.nextLine();
-                        oos.writeObject(new Message(Message.Type.SingleMessage, c.username, to, text));
+                        c.networkUtil.write(new Message(Message.Type.SingleMessage, c.username, to, text));
                     }
+                    else System.out.println("You must connect to the server first");
                     break;
                 case 4:
-                    assert c != null;
-                    if (c.isConnected) {
+                    if (c != null && c.isConnected) {
                         System.out.println("Enter your message:");
                         String text = scanner.nextLine();
-                        oos.writeObject(new Message(Message.Type.Broadcast, c.username, "all", text));
+                        c.networkUtil.write(new Message(Message.Type.Broadcast, c.username, "all", text));
                     }
+                    else System.out.println("You must connect to the server first");
                     break;
                 default:
                     System.out.println("You must input a choice between 1 to 4");

@@ -32,7 +32,7 @@ public class ReadThreadServer implements Runnable{
                 if (message.type == Message.Type.SingleMessage){
                     if (clientMap.containsKey(message.to)){
                         try {
-                            clientMap.get(message.to).getNetworkUtil().write("From " + message.to + ": \n" + message.text);
+                            clientMap.get(message.to).getNetworkUtil().write("From " + message.from + ": \n" + message.text);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -48,7 +48,7 @@ public class ReadThreadServer implements Runnable{
                     for (var c : clientMap.entrySet()){
                         if (!c.getKey().equalsIgnoreCase(from)){
                             try {
-                                c.getValue().getNetworkUtil().write("Broadcast Message: " + message.text);
+                                c.getValue().getNetworkUtil().write("Broadcast Message from " + message.from + ": " + message.text);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

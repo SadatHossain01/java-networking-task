@@ -6,7 +6,7 @@ public class ReadThreadClient implements Runnable{
     Thread t;
     Client c;
     ReadThreadClient(Client c){
-        t = new Thread("ReadThreadClient");
+        t = new Thread(this, "ReadThreadClient");
         this.c = c;
         t.start();
     }
@@ -17,7 +17,7 @@ public class ReadThreadClient implements Runnable{
             try {
                 Object next = null;
                 try {
-                    next = c.ois.readUnshared();
+                    next = c.networkUtil.read();
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -26,11 +26,10 @@ public class ReadThreadClient implements Runnable{
                     var l = ((Message) next).activeList;
                     int i = 1;
                     for (var c : l){
-                        System.out.println(i++ + c);
+                        System.out.println(i++ + ". " + c);
                     }
                 }
                 else{
-                    System.out.println("printing the other");
                     System.out.println(next);
                 }
             } catch (IOException e) {
